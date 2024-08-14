@@ -1,0 +1,60 @@
+plugins {
+	id 'org.springframework.boot' version '3.0.0' // Use your current version
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'java'
+	id 'org.jetbrains.kotlin.jvm' version '1.8.0' // Use the latest version of Kotlin
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.8.0'
+}
+
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	implementation 'com.github.TeamNewPipe:NewPipeExtractor:0.24.2'
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+}
+
+
+gradle.taskGraph.whenReady {
+	taskGraph ->
+		if (taskGraph.hasTask(stage)) {
+			test.enabled = false
+		}
+}
+
+bootJar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']
+		jvmTarget = '17' // Use the appropriate JVM target version for your project
+	}
+}
