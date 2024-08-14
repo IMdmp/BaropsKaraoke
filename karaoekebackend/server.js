@@ -38,7 +38,7 @@ app.listen(4000, () => {
 const server = http.createServer(app);
 const io = new Server(server);
 
-mongoose.connect('mongodb+srv://dompagtalunan:mGaXATyGXm24fE0w@baropskaraoke.zbjth.mongodb.net/?retryWrites=true&w=majority&appName=baropskaraoke', {
+mongoose.connect('', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
